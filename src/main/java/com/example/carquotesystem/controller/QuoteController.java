@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.carquotesystem.dto.QuoteRequest;
 import com.example.carquotesystem.model.Quote;
-import com.example.carquotesystem.repository.CarRepository;
 import com.example.carquotesystem.service.QuoteService;
 
 @CrossOrigin(origins = "*")

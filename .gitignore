@@ -12,3 +12,4 @@ bin/
 
 # OS
 .DS_Store
+/.factorypath
