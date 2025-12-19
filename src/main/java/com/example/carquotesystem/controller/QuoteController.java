@@ -18,11 +18,9 @@ import com.example.carquotesystem.service.QuoteService;
 @RequestMapping("/quotes")
 public class QuoteController {
 
-	private final CarRepository carRepo;
 	private final QuoteService quoteService;
 
-	public QuoteController(CarRepository c, QuoteService s) {
-		this.carRepo = c;
+	public QuoteController(QuoteService s) {
 		this.quoteService = s;
 	}
 
