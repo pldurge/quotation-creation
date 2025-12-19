@@ -1,11 +1,9 @@
 package com.example.carquotesystem.dto;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
-public class UserRequestDTO {
+@Data
+public class CustomerRegisterRequestDTO {
 	private String username;
 	private String password;
-	private String role;
-	
 }

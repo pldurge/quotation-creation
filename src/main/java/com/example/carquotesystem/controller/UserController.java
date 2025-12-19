@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.carquotesystem.dto.ResponseStatus;
-import com.example.carquotesystem.dto.UserRequestDTO;
-import com.example.carquotesystem.dto.UserResponseDTO;
+import com.example.carquotesystem.dto.UserRegisterRequestDTO;
+import com.example.carquotesystem.dto.UserRegisterResponseDTO;
+import com.example.carquotesystem.dto.CustomerRegisterRequestDTO;
+import com.example.carquotesystem.dto.CustomerRegisterResponseDTO;
 import com.example.carquotesystem.model.User;
 import com.example.carquotesystem.service.UserService;
 
@@ -25,9 +27,18 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@PostMapping("/register")
-	public ResponseEntity<UserResponseDTO> signUp(@RequestBody UserRequestDTO userRequest){
-		UserResponseDTO dto = new UserResponseDTO();
+	@PostMapping("/registercustomer")
+	public ResponseEntity<CustomerRegisterResponseDTO> signUp(@RequestBody CustomerRegisterRequestDTO userRequest){
+		CustomerRegisterResponseDTO dto = new CustomerRegisterResponseDTO();
+		User user = userService.registerNewUser(userRequest.getUsername(), userRequest.getPassword(), "customer");
+		dto.setId(user.getId());
+		dto.setStatus(ResponseStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+	}
+	
+	@PostMapping("/registeruser")
+	public ResponseEntity<UserRegisterResponseDTO> signUp(@RequestBody UserRegisterRequestDTO userRequest){
+		UserRegisterResponseDTO dto = new UserRegisterResponseDTO();
 		User user = userService.registerNewUser(userRequest.getUsername(), userRequest.getPassword(), userRequest.getRole());
 		dto.setId(user.getId());
 		dto.setStatus(ResponseStatus.CREATED);

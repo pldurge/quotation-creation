@@ -16,11 +16,12 @@ public class SecurityConfig {
 
 		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
 				// public endpoints
-				.requestMatchers("/users/register/**").permitAll()
+				.requestMatchers("/users/registercustomer").permitAll()
 				.requestMatchers("/cars/getallcars").permitAll()
 
 				// role-based endpoints
 				.requestMatchers("/cars/addcar").hasRole("ADMIN")
+				.requestMatchers("/users/registeruser").hasRole("ADMIN")
 				.requestMatchers("/quotes/**").hasAnyRole("SALES", "ADMIN")
 
 				// everything else
