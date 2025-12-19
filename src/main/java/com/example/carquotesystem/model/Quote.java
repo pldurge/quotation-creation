@@ -25,6 +25,7 @@ public class Quote extends BaseModel{
     private double basePrice;
     private double discount;
     private double gst;
+    private double vasTotal;
     private double finalPrice;
 
     @ManyToMany

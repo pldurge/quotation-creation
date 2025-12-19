@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.carquotesystem.dto.QuoteRequest;
-import com.example.carquotesystem.dto.QuoteResponse;
-import com.example.carquotesystem.dto.ValueAddedServiceDTO;
 import com.example.carquotesystem.exception.ResourceNotFoundException;
 import com.example.carquotesystem.model.Car;
 import com.example.carquotesystem.model.Quote;
@@ -30,57 +27,30 @@ public class QuoteService {
 		this.quoteRepository = quoteRepository;
 	}
 
-	public Quote generateQuote(Long carId, QuoteRequest request) {
+	public Quote generateQuote(Long carId, double gst, double discount, List<Long> ids) throws ResourceNotFoundException {
 
 		Car car = carRepository.findById(carId).orElseThrow(() -> new ResourceNotFoundException("Car not found"));
-
-		List<ValueAddedService> services = vasRepository.findAllById(request.getServiceIds());
-
+		List<ValueAddedService> services =  getValueAddedServices(ids);
 		double vasTotal = services.stream().mapToDouble(s -> s.getPrice()).sum();
-
-		double taxableAmount = car.getBasePrice() + vasTotal - request.getDiscount();
-
-		double gstAmount = taxableAmount * request.getGst() / 100;
-
+		double taxableAmount = car.getBasePrice() + vasTotal - discount;
+		double gstAmount = taxableAmount * gst / 100;
 		double finalPrice = taxableAmount + gstAmount;
 
 		Quote quote = new Quote();
+		quote.setCar(car);
 		quote.setBasePrice(car.getBasePrice());
-		quote.setDiscount(request.getDiscount());
+		quote.setDiscount(discount);
 		quote.setGst(gstAmount);
+		quote.setVasTotal(vasTotal);
 		quote.setFinalPrice(finalPrice);
 		quote.setServices(services);
 
 		return quoteRepository.save(quote);
 	}
-
-	public QuoteResponse generateQuoteResponse(Long carId, QuoteRequest request) {
-
-		Quote quote = generateQuote(carId, request);
-
-		QuoteResponse response = new QuoteResponse();
-		response.setQuoteId(quote.getId());
-		response.setCarModel(quote.getCar().getModel());
-		response.setBasePrice(quote.getBasePrice());
-		response.setDiscount(quote.getDiscount());
-		response.setGstAmount(quote.getGst());
-		response.setFinalPrice(quote.getFinalPrice());
-
-		List<ValueAddedServiceDTO> serviceDTOs = quote.getServices().stream().map(s -> {
-			ValueAddedServiceDTO dto = new ValueAddedServiceDTO();
-			dto.setId(s.getId());
-			dto.setName(s.getName());
-			dto.setPrice(s.getPrice());
-			return dto;
-		}).toList();
-
-		response.setServices(serviceDTOs);
-
-		double vasTotal = serviceDTOs.stream().mapToDouble(ValueAddedServiceDTO::getPrice).sum();
-
-		response.setVasTotal(vasTotal);
-
-		return response;
+	
+	public List<ValueAddedService> getValueAddedServices(List<Long> ids){
+		return vasRepository.findAllById(ids);
 	}
+	
 
 }

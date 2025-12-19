@@ -3,10 +3,12 @@ package com.example.carquotesystem.dto;
 
 import java.util.List;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class QuoteResponse {
+@Getter
+@Setter
+public class QuoteResponseDTO {
 
     private Long quoteId;
     private String carModel;
