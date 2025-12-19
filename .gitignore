@@ -1,0 +1,14 @@
+# Maven / Gradle
+target/
+
+# Eclipse / STS
+bin/
+.classpath
+.project
+.settings/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
